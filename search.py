@@ -87,6 +87,38 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
+
+    #print("Start:", problem.getStartState())
+    #print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
+    #print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+
+    # using class slides as a template 
+    #start = problem.getStartState()
+    if problem.isGoalState(problem.getStartState()):
+        return []
+
+    fringe = util.Stack()
+    fringe.push((problem.getStartState(), []))
+    visited = set()
+
+    while fringe:
+        state, actions = fringe.pop()
+
+        if state in visited:
+            continue
+        visited.add(state)
+
+        if problem.isGoalState(state):
+            return actions
+        
+        # getSuccessors returns 3 variables: state, action, and cost
+        # going to ignore cost for now
+        for next_state, next_action, _ in problem.getSuccessors(state):
+            if next_state not in visited:
+                fringe.push((next_state, actions + [next_action]))
+    
+    return []
+
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
