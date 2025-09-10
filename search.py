@@ -132,7 +132,7 @@ def breadthFirstSearch(problem):
     fringe.push((problem.getStartState(), []))
     visited = set()
 
-    while not fringe.isEmpty():
+    while fringe:
         state, path = fringe.pop()
 
         if state in visited:
@@ -153,6 +153,34 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+
+    # using a similar format to bfs and dfs, but with a priority queue
+    if problem.isGoalState(problem.getStartState()):
+        return []
+    
+    fringe = util.PriorityQueue()
+    fringe.push((problem.getStartState(), [], 0), 0)
+    visited = set()
+    best_cost = {problem.getStartState(): 0}
+
+    while fringe:
+        state, path, cost = fringe.pop()
+
+        if state in visited:
+            continue 
+        visited.add(state)
+
+        if problem.isGoalState(state):
+            return path 
+        
+        for next_state, next_action, next_cost in problem.getSuccessors(state):
+            new_cost = cost + next_cost
+            if (next_state not in visited) and (next_state not in best_cost or new_cost < best_cost[next_state]):
+                best_cost[next_state] = new_cost
+                fringe.push((next_state, path + [next_action], new_cost), new_cost)
+    
+    return []
+
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
